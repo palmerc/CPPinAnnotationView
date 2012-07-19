@@ -22,8 +22,8 @@
 }
 
 @property (nonatomic, assign) CLLocationCoordinate2D coordinate;
-@property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSString *subtitle;
+@property (nonatomic, readwrite, copy) NSString *title;
+@property (nonatomic, readwrite, copy) NSString *subtitle;
 @property (nonatomic, retain) NSArray *images;
 
 @end

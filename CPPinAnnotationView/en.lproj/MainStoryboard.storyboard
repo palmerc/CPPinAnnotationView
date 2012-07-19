@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2809" systemVersion="12A269" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1884"/>
+        <deployment defaultVersion="1296" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -12,26 +13,23 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView translatesAutoresizingMaskIntoConstraints="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="66H-x3-nUj">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="gnq-nG-rb5">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
-                                    <outlet property="delegate" destination="2" id="6dH-eu-4Ls"/>
+                                    <outlet property="delegate" destination="2" id="ReQ-fl-1Pc"/>
                                 </connections>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="66H-x3-nUj" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="Bxg-MA-MBV"/>
-                            <constraint firstItem="66H-x3-nUj" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="default" id="CeN-eY-qbx"/>
-                            <constraint firstItem="66H-x3-nUj" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="POE-4H-tR1"/>
-                            <constraint firstItem="66H-x3-nUj" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="TCm-Tg-zgm"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="mapView" destination="66H-x3-nUj" id="yHH-k9-fDb"/>
+                        <outlet property="mapView" destination="gnq-nG-rb5" id="e72-YL-uqz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="94" y="-150"/>
         </scene>
     </scenes>
     <classes>
@@ -40,9 +38,6 @@
             <relationships>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
             </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

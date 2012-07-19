@@ -25,6 +25,8 @@
 		C72A661C15B4D26B00E95458 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72A661B15B4D26B00E95458 /* CoreLocation.framework */; };
 		C72A661E15B4D2A700E95458 /* Tjuvholmen.gpx in Resources */ = {isa = PBXBuildFile; fileRef = C72A661D15B4D2A700E95458 /* Tjuvholmen.gpx */; };
 		C7DF04C515B73FCE002C63B8 /* CPAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C7DF04C415B73FCE002C63B8 /* CPAnnotation.m */; };
+		C7ED6D1815B847D2001CC7B9 /* red_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = C7ED6D1615B847D2001CC7B9 /* red_pin.png */; };
+		C7ED6D1915B847D2001CC7B9 /* red_pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7ED6D1715B847D2001CC7B9 /* red_pin@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,8 @@
 		C72A661D15B4D2A700E95458 /* Tjuvholmen.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Tjuvholmen.gpx; path = ../Tjuvholmen.gpx; sourceTree = "<group>"; };
 		C7DF04C315B73FCE002C63B8 /* CPAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPAnnotation.h; sourceTree = "<group>"; };
 		C7DF04C415B73FCE002C63B8 /* CPAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPAnnotation.m; sourceTree = "<group>"; };
+		C7ED6D1615B847D2001CC7B9 /* red_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_pin.png; sourceTree = "<group>"; };
+		C7ED6D1715B847D2001CC7B9 /* red_pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_pin@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +131,7 @@
 		C72A65E515B4D1A600E95458 /* CPPinAnnotationView */ = {
 			isa = PBXGroup;
 			children = (
+				C7ED6D1515B847D2001CC7B9 /* Graphics */,
 				C72A65EE15B4D1A600E95458 /* CPAppDelegate.h */,
 				C72A65EF15B4D1A600E95458 /* CPAppDelegate.m */,
 				C72A65F115B4D1A600E95458 /* MainStoryboard.storyboard */,
@@ -170,6 +175,15 @@
 				C72A660615B4D1A600E95458 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C7ED6D1515B847D2001CC7B9 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				C7ED6D1615B847D2001CC7B9 /* red_pin.png */,
+				C7ED6D1715B847D2001CC7B9 /* red_pin@2x.png */,
+			);
+			path = Graphics;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,6 +261,8 @@
 				C72A65EA15B4D1A600E95458 /* InfoPlist.strings in Resources */,
 				C72A65F315B4D1A600E95458 /* MainStoryboard.storyboard in Resources */,
 				C72A661E15B4D2A700E95458 /* Tjuvholmen.gpx in Resources */,
+				C7ED6D1815B847D2001CC7B9 /* red_pin.png in Resources */,
+				C7ED6D1915B847D2001CC7B9 /* red_pin@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
