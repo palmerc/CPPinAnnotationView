@@ -8,6 +8,21 @@
 
 #import <MapKit/MapKit.h>
 
-@interface CPPinAnnotationView : MKPinAnnotationView
+typedef enum {
+    CPPinAnnotationColorRed,
+    CPPinAnnotationColorPurple,
+    CPPinAnnotationColorGreen
+} CPPinAnnotationColor;
+
+@interface CPPinAnnotationView : MKAnnotationView {
+@private
+    UIImage *_image;
+    
+    BOOL _animatesDrop;
+    CPPinAnnotationColor _pinColor;
+}
+
+@property (nonatomic, assign, getter=isAnimatesDrop) BOOL animatesDrop;
+@property (nonatomic, assign) CPPinAnnotationColor pinColor;
 
 @end

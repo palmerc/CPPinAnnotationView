@@ -9,6 +9,8 @@
 #import "CPViewController.h"
 
 #import "CPAnnotation.h"
+#import "CPPinAnnotationView.h"
+
 
 
 @interface CPViewController ()
@@ -53,16 +55,17 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     static NSString *const kCPAnnotationIdentifer = @"MapViewAnnotation";
     
-    MKPinAnnotationView *annotationView = nil;
+    MKAnnotationView *annotationView = nil;
     if ([annotation isMemberOfClass:[CPAnnotation class]]) {
-        annotationView = (MKPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:kCPAnnotationIdentifer];
-        if (annotationView == nil) {
-            annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPAnnotationIdentifer];
-            annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeInfoLight];
-            annotationView.animatesDrop = YES;
-            annotationView.pinColor = MKPinAnnotationColorRed;
-            annotationView.canShowCallout = YES;
-            annotationView.draggable = YES;
+        CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:kCPAnnotationIdentifer];
+        if (pinAnnotationView == nil) {
+            pinAnnotationView = [[CPPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPAnnotationIdentifer];
+            pinAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeInfoLight];
+            pinAnnotationView.animatesDrop = YES;
+            pinAnnotationView.pinColor = CPPinAnnotationColorRed;
+            pinAnnotationView.canShowCallout = YES;
+            pinAnnotationView.draggable = YES;
+            annotationView = pinAnnotationView;
         } else {
             annotationView.annotation = annotation;
         }
@@ -77,40 +80,5 @@
 //
 //- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
 //}
-
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
-    if ([view isMemberOfClass:[MKPinAnnotationView class]]) {
-        MKPinAnnotationView *annotationView = (MKPinAnnotationView *)view;
-        SEL selector = @selector(_highlightedImage);
-        if ([annotationView respondsToSelector:selector]) {
-//            NSArray *images = [annotationView performSelector:selector];
-            
-//            - (id)_pinBounceImages;
-//            - (id)_highlightedImage;
-            
-//            int i = 0;
-//            for (id image in images) {
-            UIImage *image = [annotationView performSelector:selector];
-//                UIImage *uiImage = [UIImage imageWithCGImage:image];
-                
-                NSData *png = UIImagePNGRepresentation(image);
-                [png writeToURL:[NSURL URLWithString:[NSString stringWithFormat:@"file:///Users/palmerc/red_pin_highlighted@2x.png"]] atomically:YES];
-//                i++;
-//            }
-        }
-    }
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-}
 
 @end
