@@ -62,7 +62,7 @@
             pinAnnotationView = [[CPPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPAnnotationIdentifer];
             pinAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeInfoLight];
             pinAnnotationView.animatesDrop = YES;
-            pinAnnotationView.pinColor = CPPinAnnotationColorRed;
+            pinAnnotationView.pinColor = CPPinAnnotationColorGreen;
             pinAnnotationView.canShowCallout = YES;
             pinAnnotationView.draggable = YES;
             annotationView = pinAnnotationView;

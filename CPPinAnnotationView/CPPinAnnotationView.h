@@ -8,6 +8,10 @@
 
 #import <MapKit/MapKit.h>
 
+#import "CPPinCalloutView.h"
+
+
+
 typedef enum {
     CPPinAnnotationColorRed,
     CPPinAnnotationColorPurple,
@@ -18,11 +22,17 @@ typedef enum {
 @private
     UIImage *_image;
     
+    CPPinCalloutView *_calloutView;
+    
+    BOOL _canShowCallout;
     BOOL _animatesDrop;
     CPPinAnnotationColor _pinColor;
 }
 
+@property (nonatomic, getter=isSelected) BOOL selected;
 @property (nonatomic, assign, getter=isAnimatesDrop) BOOL animatesDrop;
 @property (nonatomic, assign) CPPinAnnotationColor pinColor;
+
+
 
 @end

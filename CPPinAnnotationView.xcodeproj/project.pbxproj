@@ -24,6 +24,7 @@
 		C72A661915B4D26200E95458 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72A661815B4D26200E95458 /* MapKit.framework */; };
 		C72A661C15B4D26B00E95458 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72A661B15B4D26B00E95458 /* CoreLocation.framework */; };
 		C72A661E15B4D2A700E95458 /* Tjuvholmen.gpx in Resources */ = {isa = PBXBuildFile; fileRef = C72A661D15B4D2A700E95458 /* Tjuvholmen.gpx */; };
+		C73623DA15BB36CA00FA0AB2 /* CPPinCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73623D915BB36CA00FA0AB2 /* CPPinCalloutView.m */; };
 		C7C99FFA15B98F29006B3865 /* green_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C99F9815B98F29006B3865 /* green_pin.png */; };
 		C7C99FFB15B98F29006B3865 /* green_pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C99F9915B98F29006B3865 /* green_pin@2x.png */; };
 		C7C99FFC15B98F29006B3865 /* green_pin_bounce_frame0.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C99F9A15B98F29006B3865 /* green_pin_bounce_frame0.png */; };
@@ -160,6 +161,8 @@
 		C72A661815B4D26200E95458 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		C72A661B15B4D26B00E95458 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		C72A661D15B4D2A700E95458 /* Tjuvholmen.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Tjuvholmen.gpx; path = ../Tjuvholmen.gpx; sourceTree = "<group>"; };
+		C73623D815BB36CA00FA0AB2 /* CPPinCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPinCalloutView.h; sourceTree = "<group>"; };
+		C73623D915BB36CA00FA0AB2 /* CPPinCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPPinCalloutView.m; sourceTree = "<group>"; };
 		C7C99F9815B98F29006B3865 /* green_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_pin.png; sourceTree = "<group>"; };
 		C7C99F9915B98F29006B3865 /* green_pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_pin@2x.png"; sourceTree = "<group>"; };
 		C7C99F9A15B98F29006B3865 /* green_pin_bounce_frame0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_pin_bounce_frame0.png; sourceTree = "<group>"; };
@@ -333,6 +336,8 @@
 				C7DF04C415B73FCE002C63B8 /* CPAnnotation.m */,
 				C723B14A15B75299006D8A0B /* CPPinAnnotationView.h */,
 				C723B14B15B75299006D8A0B /* CPPinAnnotationView.m */,
+				C73623D815BB36CA00FA0AB2 /* CPPinCalloutView.h */,
+				C73623D915BB36CA00FA0AB2 /* CPPinCalloutView.m */,
 				C72A65E615B4D1A600E95458 /* Supporting Files */,
 			);
 			path = CPPinAnnotationView;
@@ -686,6 +691,7 @@
 				C72A65F615B4D1A600E95458 /* CPViewController.m in Sources */,
 				C7DF04C515B73FCE002C63B8 /* CPAnnotation.m in Sources */,
 				C723B14C15B75299006D8A0B /* CPPinAnnotationView.m in Sources */,
+				C73623DA15BB36CA00FA0AB2 /* CPPinCalloutView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
