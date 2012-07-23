@@ -65,6 +65,10 @@
             pinAnnotationView.pinColor = CPPinAnnotationColorGreen;
             pinAnnotationView.canShowCallout = YES;
             pinAnnotationView.draggable = YES;
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+            label.text = @"Hello, World!";
+            pinAnnotationView.contentView = label;
+            [label release];
             annotationView = pinAnnotationView;
         } else {
             annotationView.annotation = annotation;

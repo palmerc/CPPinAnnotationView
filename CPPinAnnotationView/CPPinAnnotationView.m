@@ -31,6 +31,7 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 #pragma mark Implementation
 @implementation CPPinAnnotationView
 @synthesize image = _image;
+@synthesize contentView = _contentView;
 @synthesize animatesDrop = _animatesDrop;
 @synthesize pinColor = _pinColor;
 
@@ -46,69 +47,61 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
         
         CGSize pinSize = self.image.size;
         self.bounds = CGRectMake(0.0f, 0.0f, pinSize.width, pinSize.height);
-        self.centerOffset = CGPointMake(floorf(pinSize.width / 2.0f * xPinBaseOffsetPercentage), -1.0f * floorf(pinSize.height / 2.0f * yPinBaseOffsetPercentage));
-        self.calloutOffset = CGPointMake(floorf(pinSize.width * xPinBaseOffsetPercentage - pinSize.width / 2.0f), 0.0f);
-        NSLog(@"Center Offset - %f, %f", self.centerOffset.x, self.centerOffset.y);
-        NSLog(@"Callout Offset - %f, %f", self.calloutOffset.x, self.calloutOffset.y);
-
+        
+        CGPoint pinPoint = CGPointMake(floorf(pinSize.width / 2.0f * xPinBaseOffsetPercentage), -1.0f * floorf(pinSize.height / 2.0f * yPinBaseOffsetPercentage));
+        self.centerOffset = pinPoint;
+        
         self.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.25];
     }
     return self;
 }
 
 - (void)dealloc {
-    [_image release];    
+    [_image release];
     
     [super dealloc];
 }
-
-- (void)layoutSubviews {
-    NSLog(@"layout");
-}
-
 
 
 
 - (void)drawRect:(CGRect)rect {
     CGRect pinRect = rect;
-  
+    
     [self.image drawInRect:pinRect];
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    
-    NSString *state = nil;
-    if (selected) {
-        state = @"Selected";
-        
-//        BOOL isFinished = NO;
-//        UIView *view = self;
-//        while (!isFinished) {
-//            if ([view isMemberOfClass:[MKMapView class]]) {
-//                isFinished = YES;
-//            } else {
-//                view = [view superview];
-//            }
-//        }
-        
-//        CGPoint point = [self convertPoint:self.frame.origin toView:view];
-        NSLog(@"Center - %f, %f", self.center.x, self.center.y);
-        NSLog(@"Center Offset - %f, %f", self.centerOffset.x, self.centerOffset.y);
-        NSLog(@"Callout Offset - %f, %f", self.calloutOffset.x, self.calloutOffset.y);
-        
-        
-        CGRect calloutOffset = CGRectMake(self.centerOffset.x - 50.0f, self.centerOffset.y - 50.0f - self.bounds.size.height + (self.bounds.size.height / 2.0f * (1.0f - yPinBaseOffsetPercentage)), 100.0f, 100.0f);
-        _calloutView = [[CPPinCalloutView alloc] initWithFrame:calloutOffset];
-        _calloutView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
-            
-        [self addSubview:_calloutView];
-        
-    } else {
-        state = @"Deselected";
-        
-        [_calloutView removeFromSuperview];
+- (CGPoint)calloutOffset {
+    CGFloat calloutViewHeight = 0.0f;
+    if (_calloutView) {
+        calloutViewHeight = _calloutView.bounds.size.height;
     }
-    NSLog(@"State: %@", state);
+    
+    return CGPointMake(self.centerOffset.x, self.centerOffset.y - (calloutViewHeight / 2.0f) - self.bounds.size.height / 2.0f);
+}
+
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    if (_contentView) {
+        NSString *state = nil;
+        if (selected) {
+            state = @"Selected";
+            
+            CGRect frame = self.contentView.bounds;
+            frame.origin.x = self.calloutOffset.x;
+            frame.origin.y = self.calloutOffset.y;
+            _calloutView = [[CPPinCalloutView alloc] initWithFrame:frame];
+            _calloutView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
+            
+            [self addSubview:_calloutView];
+            
+        } else {
+            state = @"Deselected";
+            
+            [_calloutView removeFromSuperview];
+            [_calloutView release];
+        }
+        NSLog(@"State: %@", state);
+    }
 }
 
 
