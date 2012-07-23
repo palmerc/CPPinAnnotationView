@@ -8,7 +8,7 @@
 
 
 
-#import "CPPinCalloutView.h"
+#import "CPCalloutAnnotationView.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 
@@ -21,7 +21,7 @@
 
 #pragma mark -
 #pragma mark Private Category
-@interface CPPinCalloutView()
+@interface CPCalloutAnnotationView()
 @property (nonatomic, readonly) CGFloat yShadowOffset;
 @property (nonatomic) CGRect endFrame;
 
@@ -33,8 +33,9 @@
 
 #pragma mark -
 #pragma mark Implementation
-@implementation CPPinCalloutView
+@implementation CPCalloutAnnotationView
 @synthesize contentView = _contentView;
+@synthesize calloutOffset = _calloutOffset;
 @synthesize endFrame = _endFrame;
 @synthesize yShadowOffset = _yShadowOffset;
 @synthesize strokeWidth = _strokeWidth;
@@ -50,6 +51,10 @@
 @synthesize shineEnabled = _shineEnabled;
 
 
+
+- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
+    return [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+}
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -79,13 +84,15 @@
     [_shadowColor release];
     [_borderColor release];
     
-    [_parentAnnotationView release];
-    [_mapView release];
 	[_contentView release];
     
     [super dealloc];
 }
 
+
+- (BOOL)canShowCallout {
+    return NO; // Prevent the stock view from appearing
+}
 
 
 - (void)drawRect:(CGRect)rect {
@@ -210,6 +217,16 @@
 }
 
 
+- (void)setContentView:(UIView *)contentView {
+    if (contentView != _contentView) {
+        [_contentView release];
+        _contentView = nil;
+    }
+    
+    _contentView = [contentView retain];
+    [self addSubview:_contentView];
+}
+
 
 #pragma mark -
 #pragma mark Animation
@@ -219,6 +236,7 @@
 	__block CGFloat scale = 0.001f;
 	self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
     
+    CGAffineTransformMakeScale(1.1, 1.1);
     [UIView animateWithDuration:0.075 delay:0 options:UIViewAnimationCurveEaseOut animations:^{
         scale = 1.1;
         self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);

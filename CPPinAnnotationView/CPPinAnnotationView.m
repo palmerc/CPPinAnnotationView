@@ -30,10 +30,11 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 #pragma mark -
 #pragma mark Implementation
 @implementation CPPinAnnotationView
+@synthesize calloutAnnotation = _calloutAnnotation;
 @synthesize image = _image;
-@synthesize contentView = _contentView;
-@synthesize animatesDrop = _animatesDrop;
 @synthesize pinColor = _pinColor;
+@synthesize animatesDrop = _animatesDrop;
+
 
 
 - (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
@@ -70,41 +71,9 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
     [self.image drawInRect:pinRect];
 }
 
-- (CGPoint)calloutOffset {
-    CGFloat calloutViewHeight = 0.0f;
-    if (_calloutView) {
-        calloutViewHeight = _calloutView.bounds.size.height;
-    }
-    
-    return CGPointMake(self.centerOffset.x, self.centerOffset.y - (calloutViewHeight / 2.0f) - self.bounds.size.height / 2.0f);
+- (CGPoint)calloutOffset {    
+    return CGPointMake(floorf(self.centerOffset.x), floorf(self.centerOffset.y - (1.0f - self.bounds.size.height / 2.0f * yPinBaseOffsetPercentage)));
 }
-
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    if (_contentView) {
-        NSString *state = nil;
-        if (selected) {
-            state = @"Selected";
-            
-            CGRect frame = self.contentView.bounds;
-            frame.origin.x = self.calloutOffset.x;
-            frame.origin.y = self.calloutOffset.y;
-            _calloutView = [[CPPinCalloutView alloc] initWithFrame:frame];
-            _calloutView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
-            
-            [self addSubview:_calloutView];
-            
-        } else {
-            state = @"Deselected";
-            
-            [_calloutView removeFromSuperview];
-            [_calloutView release];
-        }
-        NSLog(@"State: %@", state);
-    }
-}
-
-
 
 - (BOOL)canShowCallout {
     return NO; // Prevent the stock view from appearing

@@ -12,7 +12,7 @@
 
 
 
-@interface CPAnnotation : NSObject <MKAnnotation> {
+@interface CPPinAnnotation : NSObject <MKAnnotation> {
 @private
     CLLocationCoordinate2D _coordinate;
  

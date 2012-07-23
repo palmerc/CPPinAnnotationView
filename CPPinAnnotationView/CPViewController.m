@@ -8,8 +8,10 @@
 
 #import "CPViewController.h"
 
-#import "CPAnnotation.h"
+#import "CPPinAnnotation.h"
+#import "CPCalloutAnnotation.h"
 #import "CPPinAnnotationView.h"
+#import "CPCalloutAnnotationView.h"
 
 
 
@@ -44,7 +46,7 @@
 #pragma mark -
 #pragma mark MKMapViewDelegate
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
-    CPAnnotation *annotation = [[CPAnnotation alloc] init];
+    CPPinAnnotation *annotation = [[CPPinAnnotation alloc] init];
     annotation.coordinate = userLocation.coordinate;
     annotation.title = @"You are here.";
     annotation.subtitle = [NSString stringWithFormat:@"Lat: %f, Long: %f", userLocation.coordinate.latitude, userLocation.coordinate.longitude];
@@ -53,36 +55,62 @@
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-    static NSString *const kCPAnnotationIdentifer = @"MapViewAnnotation";
-    
+    static NSString *const kCPPinAnnotationIdentifer = @"CPPinAnnotation";
+    static NSString *const kCPCalloutAnnotationIdentifer = @"CPCalloutAnnotation";
+
     MKAnnotationView *annotationView = nil;
-    if ([annotation isMemberOfClass:[CPAnnotation class]]) {
-        CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:kCPAnnotationIdentifer];
+    if ([annotation isMemberOfClass:[CPPinAnnotation class]]) {
+        CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:kCPPinAnnotationIdentifer];
         if (pinAnnotationView == nil) {
-            pinAnnotationView = [[CPPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPAnnotationIdentifer];
+            pinAnnotationView = [[CPPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPPinAnnotationIdentifer];
             pinAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeInfoLight];
             pinAnnotationView.animatesDrop = YES;
             pinAnnotationView.pinColor = CPPinAnnotationColorGreen;
             pinAnnotationView.canShowCallout = YES;
             pinAnnotationView.draggable = YES;
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
-            label.text = @"Hello, World!";
-            pinAnnotationView.contentView = label;
-            [label release];
-            annotationView = pinAnnotationView;
         } else {
-            annotationView.annotation = annotation;
+            pinAnnotationView.annotation = annotation;
         }
+        
+        annotationView = pinAnnotationView;
+    } else if ([annotation isMemberOfClass:[CPCalloutAnnotation class]]) {
+        CPCalloutAnnotationView *calloutAnnotationView = (CPCalloutAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:kCPCalloutAnnotationIdentifer];
+        if (calloutAnnotationView == nil) {
+            calloutAnnotationView = [[CPCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPCalloutAnnotationIdentifer];
+            calloutAnnotationView.bounds = CGRectMake(0.0f, 0.0f, 100.0f, 80.0f);
+            calloutAnnotationView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
+        } else {
+            calloutAnnotationView.annotation = annotation;
+        }
+        
+        annotationView = calloutAnnotationView;
     }
     
     return annotationView;
 }
 
-//- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-//
-//}
-//
-//- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
-//}
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {       
+    if ([view isMemberOfClass:[CPPinAnnotationView class]]) {
+        CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
+        
+        CGPoint calloutOffset = pinAnnotationView.calloutOffset;
+        CLLocationCoordinate2D coordinate = [mapView convertPoint:calloutOffset toCoordinateFromView:view];
+        CPCalloutAnnotation *annotation = [[CPCalloutAnnotation alloc] initWithCoordinate:coordinate];
+        pinAnnotationView.calloutAnnotation = annotation;
+        
+        [self.mapView addAnnotation:annotation];
+    }
+}
+
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
+    if ([view isMemberOfClass:[CPPinAnnotationView class]]) {
+        CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
+        CPCalloutAnnotation *annotation = pinAnnotationView.calloutAnnotation;
+        if (annotation) {
+            [self.mapView removeAnnotation:annotation];
+            pinAnnotationView.calloutAnnotation = nil;
+        }
+    }
+}
 
 @end

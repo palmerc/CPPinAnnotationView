@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Bird and Bear Industries. All rights reserved.
 //
 
-#import "CPAnnotation.h"
+#import "CPPinAnnotation.h"
 
-@implementation CPAnnotation
+@implementation CPPinAnnotation
 @synthesize coordinate = _coordinate;
 @synthesize title = _title;
 @synthesize subtitle = _subtitle;

@@ -13,11 +13,11 @@
 
 
 
-@interface CPPinCalloutView : UIView {
+@interface CPCalloutAnnotationView : MKAnnotationView {
 @private
-	MKAnnotationView *_parentAnnotationView;
-	MKMapView *_mapView;
 	UIView *_contentView;
+    
+    CGPoint _calloutOffset;
     
 	CGFloat _yShadowOffset;
 	CGPoint _offsetFromParent;
@@ -40,6 +40,8 @@
 }
 
 @property (nonatomic, retain) IBOutlet UIView *contentView;
+
+@property (nonatomic, assign) CGPoint calloutOffset;
 
 @property (nonatomic, assign) CGFloat strokeWidth;
 @property (nonatomic, assign) CGFloat cornerRadius;

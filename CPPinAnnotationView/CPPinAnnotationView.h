@@ -8,7 +8,7 @@
 
 #import <MapKit/MapKit.h>
 
-#import "CPPinCalloutView.h"
+#import "CPCalloutAnnotation.h"
 
 
 
@@ -21,18 +21,13 @@ typedef enum {
 @interface CPPinAnnotationView : MKAnnotationView {
 @private
     UIImage *_image;
-    
-    CPPinCalloutView *_calloutView;
-    UIView *_contentView;
-    
-    BOOL _canShowCallout;
+    CPCalloutAnnotation *_calloutAnnotation;
+        
     BOOL _animatesDrop;
     CPPinAnnotationColor _pinColor;
 }
 
-@property (nonatomic, retain) UIView *contentView;
-
-@property (nonatomic, getter=isSelected) BOOL selected;
+@property (nonatomic, retain) CPCalloutAnnotation *calloutAnnotation;
 @property (nonatomic, assign, getter=isAnimatesDrop) BOOL animatesDrop;
 @property (nonatomic, assign) CPPinAnnotationColor pinColor;
 @end
