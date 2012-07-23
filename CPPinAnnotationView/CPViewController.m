@@ -53,6 +53,7 @@
     annotation.subtitle = [NSString stringWithFormat:@"Lat: %f, Long: %f", userLocation.coordinate.latitude, userLocation.coordinate.longitude];
     
     [_mapView addAnnotation:annotation];
+    [annotation release];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -99,6 +100,7 @@
         pinAnnotationView.calloutAnnotation = annotation;
         
         [self.mapView addAnnotation:annotation];
+        [annotation release];
     }
 }
 
