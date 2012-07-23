@@ -55,4 +55,7 @@
 @property (nonatomic, retain) UIColor *borderColor;
 @property (nonatomic, assign, getter=isShineEnabled) BOOL shineEnabled;
 
+- (void)animateCalloutAppearance;
+- (void)animateCalloutDisappearance;
+
 @end

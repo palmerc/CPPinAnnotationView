@@ -25,6 +25,7 @@
 		C72A661C15B4D26B00E95458 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72A661B15B4D26B00E95458 /* CoreLocation.framework */; };
 		C72A661E15B4D2A700E95458 /* Tjuvholmen.gpx in Resources */ = {isa = PBXBuildFile; fileRef = C72A661D15B4D2A700E95458 /* Tjuvholmen.gpx */; };
 		C73623DA15BB36CA00FA0AB2 /* CPCalloutAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73623D915BB36CA00FA0AB2 /* CPCalloutAnnotationView.m */; };
+		C73F0ED815BDECAF005930A4 /* CPLoggerProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F0ED715BDECAF005930A4 /* CPLoggerProxy.m */; };
 		C7C99FFA15B98F29006B3865 /* green_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C99F9815B98F29006B3865 /* green_pin.png */; };
 		C7C99FFB15B98F29006B3865 /* green_pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C99F9915B98F29006B3865 /* green_pin@2x.png */; };
 		C7C99FFC15B98F29006B3865 /* green_pin_bounce_frame0.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C99F9A15B98F29006B3865 /* green_pin_bounce_frame0.png */; };
@@ -162,8 +163,10 @@
 		C72A661815B4D26200E95458 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		C72A661B15B4D26B00E95458 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		C72A661D15B4D2A700E95458 /* Tjuvholmen.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Tjuvholmen.gpx; path = ../Tjuvholmen.gpx; sourceTree = "<group>"; };
-		C73623D815BB36CA00FA0AB2 /* CPCalloutAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; path = CPCalloutAnnotationView.h; sourceTree = "<group>"; };
+		C73623D815BB36CA00FA0AB2 /* CPCalloutAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPCalloutAnnotationView.h; sourceTree = "<group>"; };
 		C73623D915BB36CA00FA0AB2 /* CPCalloutAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPCalloutAnnotationView.m; sourceTree = "<group>"; };
+		C73F0ED615BDECAF005930A4 /* CPLoggerProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPLoggerProxy.h; sourceTree = "<group>"; };
+		C73F0ED715BDECAF005930A4 /* CPLoggerProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPLoggerProxy.m; sourceTree = "<group>"; };
 		C7C99F9815B98F29006B3865 /* green_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_pin.png; sourceTree = "<group>"; };
 		C7C99F9915B98F29006B3865 /* green_pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_pin@2x.png"; sourceTree = "<group>"; };
 		C7C99F9A15B98F29006B3865 /* green_pin_bounce_frame0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_pin_bounce_frame0.png; sourceTree = "<group>"; };
@@ -262,7 +265,7 @@
 		C7C99FF715B98F29006B3865 /* red_pin_jump_frame6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_pin_jump_frame6@2x.png"; sourceTree = "<group>"; };
 		C7C99FF815B98F29006B3865 /* shadow_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shadow_pin.png; sourceTree = "<group>"; };
 		C7C99FF915B98F29006B3865 /* shadow_pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shadow_pin@2x.png"; sourceTree = "<group>"; };
-		C7DF04C315B73FCE002C63B8 /* CPPinAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; path = CPPinAnnotation.h; sourceTree = "<group>"; };
+		C7DF04C315B73FCE002C63B8 /* CPPinAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPinAnnotation.h; sourceTree = "<group>"; };
 		C7DF04C415B73FCE002C63B8 /* CPPinAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPPinAnnotation.m; sourceTree = "<group>"; };
 		C7F425D615BD887A000C225C /* CPCalloutAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPCalloutAnnotation.h; sourceTree = "<group>"; };
 		C7F425D715BD887A000C225C /* CPCalloutAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPCalloutAnnotation.m; sourceTree = "<group>"; };
@@ -343,6 +346,8 @@
 				C723B14B15B75299006D8A0B /* CPPinAnnotationView.m */,
 				C73623D815BB36CA00FA0AB2 /* CPCalloutAnnotationView.h */,
 				C73623D915BB36CA00FA0AB2 /* CPCalloutAnnotationView.m */,
+				C73F0ED615BDECAF005930A4 /* CPLoggerProxy.h */,
+				C73F0ED715BDECAF005930A4 /* CPLoggerProxy.m */,
 				C72A65E615B4D1A600E95458 /* Supporting Files */,
 			);
 			path = CPPinAnnotationView;
@@ -698,6 +703,7 @@
 				C723B14C15B75299006D8A0B /* CPPinAnnotationView.m in Sources */,
 				C73623DA15BB36CA00FA0AB2 /* CPCalloutAnnotationView.m in Sources */,
 				C7F425D815BD887A000C225C /* CPCalloutAnnotation.m in Sources */,
+				C73F0ED815BDECAF005930A4 /* CPLoggerProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,7 +33,6 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 @synthesize calloutAnnotation = _calloutAnnotation;
 @synthesize image = _image;
 @synthesize pinColor = _pinColor;
-@synthesize animatesDrop = _animatesDrop;
 
 
 
@@ -52,7 +51,7 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
         CGPoint pinPoint = CGPointMake(floorf(pinSize.width / 2.0f * xPinBaseOffsetPercentage), -1.0f * floorf(pinSize.height / 2.0f * yPinBaseOffsetPercentage));
         self.centerOffset = pinPoint;
         
-        self.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.25];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -72,7 +71,7 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 }
 
 - (CGPoint)calloutOffset {    
-    return CGPointMake(floorf(self.centerOffset.x), floorf(self.centerOffset.y - (1.0f - self.bounds.size.height / 2.0f * yPinBaseOffsetPercentage)));
+    return CGPointMake(floorf(self.centerOffset.x), -1.0f * self.bounds.size.height);
 }
 
 - (BOOL)canShowCallout {
@@ -101,14 +100,4 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
     
     return image;
 }
-
-
-- (BOOL)respondsToSelector:(SEL)aSelector {
-    BOOL respondsToSelector = [super respondsToSelector:aSelector];
-    
-    NSLog(@"Responds To Selector - %@", NSStringFromSelector(aSelector));
-    
-    return respondsToSelector;
-}
-
 @end

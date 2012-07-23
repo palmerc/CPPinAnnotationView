@@ -24,9 +24,6 @@
 @interface CPCalloutAnnotationView()
 @property (nonatomic, readonly) CGFloat yShadowOffset;
 @property (nonatomic) CGRect endFrame;
-
-- (void)animateCalloutAppearance;
-- (void)animateCalloutDisappearance;
 @end
 
 
@@ -228,8 +225,13 @@
 }
 
 
+
 #pragma mark -
 #pragma mark Animation
+- (void)animationDidStart:(CAAnimation *)anim {
+    NSLog(@"%@", anim);
+}
+
 - (void)animateCalloutAppearance {
     self.alpha = 1.0f;
 	self.endFrame = self.frame;
@@ -292,4 +294,13 @@
 - (CGFloat)relativeParentXPosition {
 	return self.bounds.size.width / 2;
 }
+
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    BOOL respondsToSelector = [super respondsToSelector:aSelector];
+    
+    NSLog(@"callout - %@", NSStringFromSelector(aSelector));
+    
+    return respondsToSelector;
+}
+
 @end

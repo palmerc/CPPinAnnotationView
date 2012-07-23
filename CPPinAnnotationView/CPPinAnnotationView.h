@@ -23,11 +23,10 @@ typedef enum {
     UIImage *_image;
     CPCalloutAnnotation *_calloutAnnotation;
         
-    BOOL _animatesDrop;
     CPPinAnnotationColor _pinColor;
 }
 
 @property (nonatomic, retain) CPCalloutAnnotation *calloutAnnotation;
-@property (nonatomic, assign, getter=isAnimatesDrop) BOOL animatesDrop;
 @property (nonatomic, assign) CPPinAnnotationColor pinColor;
+
 @end
