@@ -22,7 +22,9 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 #pragma mark -
 #pragma mark Private class extension
 @interface CPPinAnnotationView ()
-@property (nonatomic, retain, readonly) UIImage *image;
+@property (nonatomic, retain) UIImageView *annotationImageView;
+
+- (UIImage *)annotationImage;
 @end
 
 
@@ -30,8 +32,8 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 #pragma mark -
 #pragma mark Implementation
 @implementation CPPinAnnotationView
-@synthesize calloutAnnotation = _calloutAnnotation;
-@synthesize image = _image;
+@synthesize annotationImageView = _annotationImageView;
+@synthesize calloutView = _calloutView;
 @synthesize pinColor = _pinColor;
 
 
@@ -43,34 +45,29 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     
-    if (self != nil) {
-        self.pinColor = CPPinAnnotationColorRed;
-        
-        CGSize pinSize = self.image.size;
+    if (self != nil) {        
+        CGSize pinSize = self.annotationImage.size;
         self.bounds = CGRectMake(0.0f, 0.0f, pinSize.width, pinSize.height);
+        self.pinColor = CPPinAnnotationColorRed;
         
         CGPoint pinPoint = CGPointMake(floorf(pinSize.width / 2.0f * xPinBaseOffsetPercentage), -1.0f * floorf(pinSize.height / 2.0f * yPinBaseOffsetPercentage));
         self.centerOffset = pinPoint;
-        
+                
         self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
 
 - (void)dealloc {
-    [_image release];
+    [_annotationImageView release];
     
     [super dealloc];
 }
 
 
 
-- (void)drawRect:(CGRect)rect {
-    CGRect pinRect = rect;
-    
-    [self.image drawInRect:pinRect];
-}
-
+#pragma mark -
+#pragma mark MKAnnotationView methods
 - (CGPoint)calloutOffset {    
     return CGPointMake(floorf(self.centerOffset.x), -1.0f * self.bounds.size.height);
 }
@@ -81,7 +78,41 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 
 
 
-- (UIImage *)image {
+#pragma mark -
+#pragma mark Setters
+- (void)setCalloutView:(UIView *)calloutView {
+    if (calloutView != _calloutView) {
+        [_calloutView removeFromSuperview];
+        [_calloutView release];
+        _calloutView = nil;
+        
+        if (calloutView != nil) {
+            _calloutView = [calloutView retain];
+            [self addSubview:_calloutView];
+//            CGRect frame = _calloutView.frame;
+//            frame.origin.x = 0.0f;
+//            frame.origin.y = -1.0f * frame.size.height / 2.0f + self.calloutOffset.y;
+//            
+//            _calloutView.frame = frame;
+        }
+    }
+}
+
+- (void)setPinColor:(CPPinAnnotationColor)pinColor {
+    _pinColor = pinColor;
+    
+    [_annotationImageView removeFromSuperview];
+    [_annotationImageView release];
+    
+    _annotationImageView = [[UIImageView alloc] initWithImage:[self annotationImage]];
+    _annotationImageView.frame = self.bounds;
+    
+    [self addSubview:_annotationImageView];
+}
+
+
+
+- (UIImage *)annotationImage {
     UIImage *image = nil;
     
     switch (_pinColor) {

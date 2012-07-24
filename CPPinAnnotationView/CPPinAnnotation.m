@@ -13,7 +13,4 @@
 @synthesize title = _title;
 @synthesize subtitle = _subtitle;
 @synthesize images = _images;
-
-
-
 @end

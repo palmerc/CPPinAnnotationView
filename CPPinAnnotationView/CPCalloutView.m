@@ -1,6 +1,6 @@
 //
-//  CPPinCalloutView.m
-//  CPPinAnnotationView
+//  CPCalloutView.m
+//  CPCalloutView
 //
 //  Created by Cameron Lowell Palmer on 18.07.12.
 //  Copyright (c) 2012 Bird and Bear Industries. All rights reserved.
@@ -8,9 +8,11 @@
 
 
 
-#import "CPCalloutAnnotationView.h"
+#import "CPCalloutView.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
+
+
 
 #pragma mark -
 #pragma mark Constants
@@ -19,7 +21,7 @@
 
 #pragma mark -
 #pragma mark Private Property
-@interface CPCalloutAnnotationView ()
+@interface CPCalloutView ()
 @property (nonatomic, readonly) CGFloat yShadowOffset;
 @property (nonatomic) CGRect endFrame;
 @end
@@ -28,7 +30,7 @@
 
 #pragma mark -
 #pragma mark Implementation
-@implementation CPCalloutAnnotationView
+@implementation CPCalloutView
 @synthesize contentView = _contentView;
 @synthesize anchorPoint = _anchorPoint;
 @synthesize endFrame = _endFrame;
@@ -46,10 +48,6 @@
 @synthesize shineEnabled = _shineEnabled;
 
 
-
-- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
-    return [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
-}
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -86,11 +84,11 @@
     [super dealloc];
 }
 
-- (BOOL)canShowCallout {
-    return NO; // Prevent the stock view from appearing
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    self.anchorPoint = CGPointMake(floorf(self.bounds.size.width / 2.0f), 0.0f);
 }
-
-
 
 #pragma mark -
 #pragma mark drawRect
@@ -99,7 +97,6 @@
     
 	CGMutablePathRef path = CGPathCreateMutable();
 	CGContextRef context = UIGraphicsGetCurrentContext();
-	CGFloat parentX = [self relativeParentXPosition];
 	
 	//Determine Size
 	calloutRect = self.bounds;
@@ -115,9 +112,9 @@
 	CGPathAddArc(path, NULL, calloutRect.origin.x + _cornerRadius, calloutRect.origin.y + calloutRect.size.height - _cornerRadius, _cornerRadius, M_PI, M_PI / 2.0f, clockwise);
     
     // The callout triangle below the box
-	CGPathAddLineToPoint(path, NULL, parentX - _triangleWidth / 2.0f, calloutRect.origin.y + calloutRect.size.height);
-	CGPathAddLineToPoint(path, NULL, parentX, calloutRect.origin.y + calloutRect.size.height + _triangleHeight);
-    CGPathAddLineToPoint(path, NULL, parentX + _triangleWidth / 2.0f, calloutRect.origin.y + calloutRect.size.height);
+	CGPathAddLineToPoint(path, NULL, _anchorPoint.x - _triangleWidth / 2.0f, calloutRect.origin.y + calloutRect.size.height);
+	CGPathAddLineToPoint(path, NULL, _anchorPoint.x, calloutRect.origin.y + calloutRect.size.height + _triangleHeight);
+    CGPathAddLineToPoint(path, NULL, _anchorPoint.x + _triangleWidth / 2.0f, calloutRect.origin.y + calloutRect.size.height);
     
 	CGPathAddLineToPoint(path, NULL, calloutRect.origin.x + calloutRect.size.width - _cornerRadius, calloutRect.origin.y + calloutRect.size.height);
 	CGPathAddArc(path, NULL, calloutRect.origin.x + calloutRect.size.width - _cornerRadius, calloutRect.origin.y + calloutRect.size.height - _cornerRadius, _cornerRadius, M_PI / 2.0f, 0.0f, clockwise);
@@ -228,52 +225,5 @@
         _contentView = [contentView retain];
         [self addSubview:_contentView];
     }
-}
-
-
-
-#pragma mark -
-#pragma mark Animation
-- (void)animateCalloutAppearance {
-    self.endFrame = self.frame;
-    CGFloat scale = 0.001f;
-	self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
-    
-    [UIView animateWithDuration:0.1f delay:0 options:UIViewAnimationCurveEaseOut animations:^{
-        CGFloat scale = 1.3f;
-        self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationCurveEaseInOut animations:^{
-            CGFloat scale = 0.95;
-            self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationCurveEaseInOut animations:^{
-                CGFloat scale = 1.0;
-                self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
-            } completion:nil];
-        }];
-    }];
-}
-
-
-
-#pragma mark -
-#pragma mark The animation helper methods
-- (CGFloat)relativeParentXPosition {
-	return self.bounds.size.width / 2.0f;
-}
-
-- (CGFloat)xTransformForScale:(CGFloat)scale {
-	CGFloat xDistanceFromCenterToParent = self.endFrame.size.width / 2.0f - [self relativeParentXPosition];
-	CGFloat transformX = (xDistanceFromCenterToParent * scale) - xDistanceFromCenterToParent;
-    
-    return transformX;
-}
-
-- (CGFloat)yTransformForScale:(CGFloat)scale {
-	CGFloat yDistanceFromCenterToParent = self.endFrame.size.height / 2.0f;
-	CGFloat transformY = yDistanceFromCenterToParent - yDistanceFromCenterToParent * scale;    
-
-    return transformY;
 }
 @end

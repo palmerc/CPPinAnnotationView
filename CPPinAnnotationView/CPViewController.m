@@ -9,9 +9,8 @@
 #import "CPViewController.h"
 
 #import "CPPinAnnotation.h"
-#import "CPCalloutAnnotation.h"
 #import "CPPinAnnotationView.h"
-#import "CPCalloutAnnotationView.h"
+#import "CPCalloutView.h"
 #import "CPLoggerProxy.h"
 
 
@@ -58,7 +57,6 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     static NSString *const kCPPinAnnotationIdentifer = @"CPPinAnnotation";
-    static NSString *const kCPCalloutAnnotationIdentifer = @"CPCalloutAnnotation";
     
     MKAnnotationView *annotationView = nil;
     if ([annotation isMemberOfClass:[CPPinAnnotation class]]) {
@@ -74,26 +72,6 @@
         }
         
         annotationView = pinAnnotationView;
-    } else if ([annotation isMemberOfClass:[CPCalloutAnnotation class]]) {
-        CPCalloutAnnotationView *calloutAnnotationView = (CPCalloutAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:kCPCalloutAnnotationIdentifer];
-        if (calloutAnnotationView == nil) {
-            calloutAnnotationView = [[[CPCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPCalloutAnnotationIdentifer] autorelease];
-            calloutAnnotationView.bounds = CGRectMake(0.0f, 0.0f, 100.0f, 80.0f);
-            
-            UIFont *font = [UIFont boldSystemFontOfSize:14.0f];
-            NSString *hello = @"Hello, World!";
-            CGSize size = [hello sizeWithFont:font];
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, size.width, size.height)];
-            label.text = @"Hello, World!";
-            label.font = font;
-            label.textColor = [UIColor whiteColor];
-            calloutAnnotationView.contentView = label;
-            calloutAnnotationView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
-        } else {
-            calloutAnnotationView.annotation = annotation;
-        }
-        
-        annotationView = calloutAnnotationView;
     }
     
     return annotationView;
@@ -102,26 +80,35 @@
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     if ([view isMemberOfClass:[CPPinAnnotationView class]]) {
         CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
+                
+        CPCalloutView *calloutView = [[CPCalloutView alloc] init];
+        CGPoint calloutOffset = [pinAnnotationView convertPoint:pinAnnotationView.calloutOffset toView:pinAnnotationView];
         
-        CGPoint calloutOffset = pinAnnotationView.calloutOffset;
-        CLLocationCoordinate2D coordinate = [mapView convertPoint:calloutOffset toCoordinateFromView:pinAnnotationView];
-        CPCalloutAnnotation *annotation = [[CPCalloutAnnotation alloc] initWithCoordinate:coordinate];
-        pinAnnotationView.calloutAnnotation = annotation;
+        CGRect frame = CGRectMake(0.0f, 0.0f, 100.0f, 80.0f);
         
-        [self.mapView addAnnotation:annotation];
-        [annotation release];
+        UIFont *font = [UIFont boldSystemFontOfSize:14.0f];
+        NSString *hello = @"Hello, World!";
+        CGSize size = [hello sizeWithFont:font];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, size.width, size.height)];
+        label.text = @"Hello, World!";
+        label.font = font;
+        label.textColor = [UIColor whiteColor];
+        label.backgroundColor = [UIColor clearColor];
+        calloutView.contentView = label;
+        [label release];
+        
+        calloutView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
+        pinAnnotationView.calloutView = calloutView;
+        [calloutView release];
     }
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
     if ([view isMemberOfClass:[CPPinAnnotationView class]]) {
         CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
-        CPCalloutAnnotation *annotation = pinAnnotationView.calloutAnnotation;
-        if (annotation) {
-            [self.mapView removeAnnotation:annotation];
-            pinAnnotationView.calloutAnnotation = nil;
-        }
-    }
+        
+        pinAnnotationView.calloutView = nil;
+     }
 }
 
 - (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
@@ -142,11 +129,7 @@
                 pinAnnotationView.frame = endFrame;
             } completion:^(BOOL finished){
             }];
-        } else if ([view isMemberOfClass:[CPCalloutAnnotationView class]]) {
-            CPCalloutAnnotationView *calloutAnnotationView = (CPCalloutAnnotationView *)view;
-            [calloutAnnotationView animateCalloutAppearance];
         }
     }
 }
-
 @end

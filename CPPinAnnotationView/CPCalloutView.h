@@ -1,6 +1,6 @@
 //
-//  CPPinCalloutView.h
-//  CPPinAnnotationView
+//  CPCalloutView.h
+//  CPCalloutView
 //
 //  Created by Cameron Lowell Palmer on 18.07.12.
 //  Copyright (c) 2012 Bird and Bear Industries. All rights reserved.
@@ -9,11 +9,10 @@
 
 
 #import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
 
 
 
-@interface CPCalloutAnnotationView : MKAnnotationView {
+@interface CPCalloutView : UIView {
 @private
 	UIView *_contentView;
     
@@ -42,7 +41,6 @@
 @property (nonatomic, retain) IBOutlet UIView *contentView;
 
 @property (nonatomic, assign) CGPoint anchorPoint;
-
 @property (nonatomic, assign) CGFloat strokeWidth;
 @property (nonatomic, assign) CGFloat cornerRadius;
 @property (nonatomic, assign) CGFloat calloutInset;
@@ -54,7 +52,4 @@
 @property (nonatomic, retain) UIColor *shadowColor;
 @property (nonatomic, retain) UIColor *borderColor;
 @property (nonatomic, assign, getter=isShineEnabled) BOOL shineEnabled;
-
-- (void)animateCalloutAppearance;
-
 @end

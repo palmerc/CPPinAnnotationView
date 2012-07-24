@@ -8,8 +8,6 @@
 
 #import <MapKit/MapKit.h>
 
-#import "CPCalloutAnnotation.h"
-
 
 
 typedef enum {
@@ -20,13 +18,13 @@ typedef enum {
 
 @interface CPPinAnnotationView : MKAnnotationView {
 @private
-    UIImage *_image;
-    CPCalloutAnnotation *_calloutAnnotation;
+    UIImageView *_annotationImageView;
+    UIView *_calloutView;
         
     CPPinAnnotationColor _pinColor;
 }
 
-@property (nonatomic, retain) CPCalloutAnnotation *calloutAnnotation;
 @property (nonatomic, assign) CPPinAnnotationColor pinColor;
+@property (nonatomic, retain) UIView *calloutView;
 
 @end
