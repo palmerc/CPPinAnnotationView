@@ -17,7 +17,7 @@
 @private
 	UIView *_contentView;
     
-    CGPoint _calloutOffset;
+    CGPoint _anchorPoint;
     
 	CGFloat _yShadowOffset;
 	CGPoint _offsetFromParent;
@@ -41,7 +41,7 @@
 
 @property (nonatomic, retain) IBOutlet UIView *contentView;
 
-@property (nonatomic, assign) CGPoint calloutOffset;
+@property (nonatomic, assign) CGPoint anchorPoint;
 
 @property (nonatomic, assign) CGFloat strokeWidth;
 @property (nonatomic, assign) CGFloat cornerRadius;
@@ -56,6 +56,5 @@
 @property (nonatomic, assign, getter=isShineEnabled) BOOL shineEnabled;
 
 - (void)animateCalloutAppearance;
-- (void)animateCalloutDisappearance;
 
 @end

@@ -13,7 +13,9 @@
 @implementation CPLoggerProxy
 
 - (id) initWithOriginal:(id)value {
-    if (self = [super init]) {
+    self = [super init];
+    
+    if (self != nil) {
         original = value;
     }
     return self;

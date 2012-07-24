@@ -12,16 +12,14 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 
-#define CalloutMapAnnotationViewBottomShadowBufferSize 6.0f
-#define CalloutMapAnnotationViewContentHeightBuffer 8.0f
-#define CalloutMapAnnotationViewHeightAboveParent 13.0f
-#define CalloutMapAnnotationViewInset 4.0f
+#pragma mark -
+#pragma mark Constants
 
 
 
 #pragma mark -
-#pragma mark Private Category
-@interface CPCalloutAnnotationView()
+#pragma mark Private Property
+@interface CPCalloutAnnotationView ()
 @property (nonatomic, readonly) CGFloat yShadowOffset;
 @property (nonatomic) CGRect endFrame;
 @end
@@ -32,7 +30,7 @@
 #pragma mark Implementation
 @implementation CPCalloutAnnotationView
 @synthesize contentView = _contentView;
-@synthesize calloutOffset = _calloutOffset;
+@synthesize anchorPoint = _anchorPoint;
 @synthesize endFrame = _endFrame;
 @synthesize yShadowOffset = _yShadowOffset;
 @synthesize strokeWidth = _strokeWidth;
@@ -56,21 +54,23 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     
-    if (self) {
+    if (self != nil) {
+        _strokeWidth = 1.0f;
+        _cornerRadius = 8.0f;
+        _calloutInset = 0.0f;
+        _triangleWidth = 30.0f;
+        _triangleHeight = 15.0f;
+        _shadowOffset = CGSizeMake(0.0f, 6.0f);
+        _shadowBlur = 6.0f;
+        
+        _shineEnabled = YES;
+        
 		self.backgroundColor = [UIColor clearColor];
         self.baseColor = [[UIColor blackColor] colorWithAlphaComponent:0.6f];
         self.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
         self.borderColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.9f];
-        
-        _strokeWidth = 1.0f;
-        _cornerRadius = 8.0f;
-        _calloutInset = 7.0f;
-        _triangleWidth = 30.0f;
-        _triangleHeight = 15.0f;
-        _shadowOffset = CGSizeMake(0, self.yShadowOffset);
-        _shadowBlur = 6.0f;
-        
-        _shineEnabled = YES;
+        self.clipsToBounds = YES;
+        self.layer.cornerRadius = _cornerRadius;
 	}
     
 	return self;
@@ -86,12 +86,14 @@
     [super dealloc];
 }
 
-
 - (BOOL)canShowCallout {
     return NO; // Prevent the stock view from appearing
 }
 
 
+
+#pragma mark -
+#pragma mark drawRect
 - (void)drawRect:(CGRect)rect {
     CGRect calloutRect = rect;
     
@@ -214,40 +216,38 @@
 }
 
 
+
+#pragma mark -
+#pragma mark Setter
 - (void)setContentView:(UIView *)contentView {
     if (contentView != _contentView) {
+        [_contentView removeFromSuperview];
         [_contentView release];
         _contentView = nil;
+        
+        _contentView = [contentView retain];
+        [self addSubview:_contentView];
     }
-    
-    _contentView = [contentView retain];
-    [self addSubview:_contentView];
 }
 
 
 
 #pragma mark -
 #pragma mark Animation
-- (void)animationDidStart:(CAAnimation *)anim {
-    NSLog(@"%@", anim);
-}
-
 - (void)animateCalloutAppearance {
-    self.alpha = 1.0f;
-	self.endFrame = self.frame;
-	__block CGFloat scale = 0.001f;
+    self.endFrame = self.frame;
+    CGFloat scale = 0.001f;
 	self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
     
-    CGAffineTransformMakeScale(1.1, 1.1);
-    [UIView animateWithDuration:0.075 delay:0 options:UIViewAnimationCurveEaseOut animations:^{
-        scale = 1.1;
+    [UIView animateWithDuration:0.1f delay:0 options:UIViewAnimationCurveEaseOut animations:^{
+        CGFloat scale = 1.3f;
         self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationCurveEaseInOut animations:^{
             CGFloat scale = 0.95;
             self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
         } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.075 delay:0 options:UIViewAnimationCurveEaseInOut animations:^{
+            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationCurveEaseInOut animations:^{
                 CGFloat scale = 1.0;
                 self.transform = CGAffineTransformMake(scale, 0.0f, 0.0f, scale, [self xTransformForScale:scale], [self yTransformForScale:scale]);
             } completion:nil];
@@ -255,52 +255,25 @@
     }];
 }
 
-- (void)animateCalloutDisappearance {
-    [self setAlpha:1.0f];
-    
-    [UIView animateWithDuration:10.0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        [self setAlpha:0.0f];
-    } completion:nil];
-}
-
 
 
 #pragma mark -
-#pragma mark The helper methods
+#pragma mark The animation helper methods
+- (CGFloat)relativeParentXPosition {
+	return self.bounds.size.width / 2.0f;
+}
+
 - (CGFloat)xTransformForScale:(CGFloat)scale {
-	CGFloat xDistanceFromCenterToParent = self.endFrame.size.width / 2 - [self relativeParentXPosition];
-	return (xDistanceFromCenterToParent * scale) - xDistanceFromCenterToParent;
+	CGFloat xDistanceFromCenterToParent = self.endFrame.size.width / 2.0f - [self relativeParentXPosition];
+	CGFloat transformX = (xDistanceFromCenterToParent * scale) - xDistanceFromCenterToParent;
+    
+    return transformX;
 }
 
 - (CGFloat)yTransformForScale:(CGFloat)scale {
-	CGFloat yDistanceFromCenterToParent = (((self.endFrame.size.height) / 2) + CalloutMapAnnotationViewBottomShadowBufferSize + CalloutMapAnnotationViewHeightAboveParent);
-	return yDistanceFromCenterToParent - yDistanceFromCenterToParent * scale;
-}
+	CGFloat yDistanceFromCenterToParent = self.endFrame.size.height / 2.0f;
+	CGFloat transformY = yDistanceFromCenterToParent - yDistanceFromCenterToParent * scale;    
 
-- (CGFloat)yShadowOffset {
-	if (!_yShadowOffset) {
-		float osVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
-		if (osVersion >= 3.2) {
-			_yShadowOffset = 6;
-		} else {
-			_yShadowOffset = -6;
-		}
-		
-	}
-    
-	return _yShadowOffset;
+    return transformY;
 }
-
-- (CGFloat)relativeParentXPosition {
-	return self.bounds.size.width / 2;
-}
-
-- (BOOL)respondsToSelector:(SEL)aSelector {
-    BOOL respondsToSelector = [super respondsToSelector:aSelector];
-    
-    NSLog(@"callout - %@", NSStringFromSelector(aSelector));
-    
-    return respondsToSelector;
-}
-
 @end

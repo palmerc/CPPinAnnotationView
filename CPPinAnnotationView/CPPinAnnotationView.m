@@ -42,7 +42,8 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if (self) {
+    
+    if (self != nil) {
         self.pinColor = CPPinAnnotationColorRed;
         
         CGSize pinSize = self.image.size;

@@ -79,6 +79,15 @@
         if (calloutAnnotationView == nil) {
             calloutAnnotationView = [[[CPCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPCalloutAnnotationIdentifer] autorelease];
             calloutAnnotationView.bounds = CGRectMake(0.0f, 0.0f, 100.0f, 80.0f);
+            
+            UIFont *font = [UIFont boldSystemFontOfSize:14.0f];
+            NSString *hello = @"Hello, World!";
+            CGSize size = [hello sizeWithFont:font];
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, size.width, size.height)];
+            label.text = @"Hello, World!";
+            label.font = font;
+            label.textColor = [UIColor whiteColor];
+            calloutAnnotationView.contentView = label;
             calloutAnnotationView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
         } else {
             calloutAnnotationView.annotation = annotation;
