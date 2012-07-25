@@ -49,8 +49,8 @@
 
 
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (id)init {
+    self = [super init];
     
     if (self != nil) {
         _strokeWidth = 1.0f;
@@ -84,14 +84,21 @@
     [super dealloc];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    self.anchorPoint = CGPointMake(floorf(self.bounds.size.width / 2.0f), 0.0f);
-}
+
 
 #pragma mark -
-#pragma mark drawRect
+#pragma mark UIView methods
+//- (void)layoutSubviews {
+//    [super layoutSubviews];
+//    
+//    CGPoint anchorPoint = self.anchorPoint;
+//    CGRect contentViewBounds = self.contentView.bounds;
+//    contentViewBounds.origin.x = anchorPoint.x - contentViewBounds.size.width / 2.0f;
+//    contentViewBounds.origin.y = anchorPoint.y - contentViewBounds.size.height;
+//
+//    self.frame = contentViewBounds;
+//}
+
 - (void)drawRect:(CGRect)rect {
     CGRect calloutRect = rect;
     

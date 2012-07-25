@@ -69,7 +69,7 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 #pragma mark -
 #pragma mark MKAnnotationView methods
 - (CGPoint)calloutOffset {    
-    return CGPointMake(floorf(self.centerOffset.x), -1.0f * self.bounds.size.height);
+    return CGPointMake(floorf(self.centerOffset.x), 0.0f);
 }
 
 - (BOOL)canShowCallout {
@@ -80,24 +80,6 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 
 #pragma mark -
 #pragma mark Setters
-- (void)setCalloutView:(UIView *)calloutView {
-    if (calloutView != _calloutView) {
-        [_calloutView removeFromSuperview];
-        [_calloutView release];
-        _calloutView = nil;
-        
-        if (calloutView != nil) {
-            _calloutView = [calloutView retain];
-            [self addSubview:_calloutView];
-//            CGRect frame = _calloutView.frame;
-//            frame.origin.x = 0.0f;
-//            frame.origin.y = -1.0f * frame.size.height / 2.0f + self.calloutOffset.y;
-//            
-//            _calloutView.frame = frame;
-        }
-    }
-}
-
 - (void)setPinColor:(CPPinAnnotationColor)pinColor {
     _pinColor = pinColor;
     
@@ -108,6 +90,17 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
     _annotationImageView.frame = self.bounds;
     
     [self addSubview:_annotationImageView];
+}
+
+- (void)setCalloutView:(UIView *)calloutView {
+    if (calloutView != _calloutView) {
+        [_calloutView removeFromSuperview];
+        [_calloutView release];
+        _calloutView = nil;
+        
+        _calloutView = [calloutView retain];
+        [self addSubview:_calloutView];
+    }
 }
 
 
