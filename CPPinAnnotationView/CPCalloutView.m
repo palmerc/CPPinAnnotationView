@@ -37,7 +37,8 @@
 @synthesize yShadowOffset = _yShadowOffset;
 @synthesize strokeWidth = _strokeWidth;
 @synthesize cornerRadius = _cornerRadius;
-@synthesize calloutInset = _calloutInset;
+@synthesize calloutWidthInset = _calloutWidthInset;
+@synthesize calloutBottomInset = _calloutBottomInset;
 @synthesize triangleWidth = _triangleWidth;
 @synthesize triangleHeight = _triangleHeight;
 @synthesize shadowOffset = _shadowOffset;
@@ -49,24 +50,29 @@
 
 
 
-- (id)init {
-    self = [super init];
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     
     if (self != nil) {
         _strokeWidth = 1.0f;
         _cornerRadius = 8.0f;
-        _calloutInset = 0.0f;
+     
+        // For the shadow
+        _calloutWidthInset = 2.0f;
+        _calloutBottomInset = 4.0f;
+        _shadowOffset = CGSizeMake(0.0f, _calloutBottomInset);
+        _shadowBlur = 4.0f;
+        
         _triangleWidth = 30.0f;
         _triangleHeight = 15.0f;
-        _shadowOffset = CGSizeMake(0.0f, 6.0f);
-        _shadowBlur = 6.0f;
-        
+                
         _shineEnabled = YES;
         
 		self.backgroundColor = [UIColor clearColor];
         self.baseColor = [[UIColor blackColor] colorWithAlphaComponent:0.6f];
         self.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
         self.borderColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.9f];
+        
         self.clipsToBounds = YES;
         self.layer.cornerRadius = _cornerRadius;
 	}
@@ -88,16 +94,13 @@
 
 #pragma mark -
 #pragma mark UIView methods
-//- (void)layoutSubviews {
-//    [super layoutSubviews];
-//    
-//    CGPoint anchorPoint = self.anchorPoint;
-//    CGRect contentViewBounds = self.contentView.bounds;
-//    contentViewBounds.origin.x = anchorPoint.x - contentViewBounds.size.width / 2.0f;
-//    contentViewBounds.origin.y = anchorPoint.y - contentViewBounds.size.height;
-//
-//    self.frame = contentViewBounds;
-//}
+- (void)layoutSubviews {
+    CGRect frame = self.contentView.frame;
+    frame.origin.x = _strokeWidth + _calloutWidthInset;
+    frame.origin.y = _strokeWidth;
+    
+    self.contentView.frame = frame;
+}
 
 - (void)drawRect:(CGRect)rect {
     CGRect calloutRect = rect;
@@ -107,10 +110,12 @@
 	
 	//Determine Size
 	calloutRect = self.bounds;
-	calloutRect.size.width -= _strokeWidth + 2.0f * _calloutInset;
-	calloutRect.size.height -= _strokeWidth + _triangleHeight + 2.0f * _calloutInset;
-	calloutRect.origin.x += _strokeWidth / 2.0f + _calloutInset;
-	calloutRect.origin.y += _strokeWidth / 2.0f + _calloutInset;
+	calloutRect.size.width -= 2.0f * (_strokeWidth + _calloutWidthInset);
+	calloutRect.size.height -= 2.0f * _strokeWidth + _triangleHeight + _calloutBottomInset;
+	calloutRect.origin.x += _strokeWidth / 2.0f + _calloutWidthInset;
+	calloutRect.origin.y += _strokeWidth / 2.0f;
+    
+    CGRect innerRect = CGRectInset(calloutRect, _cornerRadius, _cornerRadius);
     
 	//Create Path For Callout Bubble
     BOOL clockwise = YES;
@@ -232,5 +237,12 @@
         _contentView = [contentView retain];
         [self addSubview:_contentView];
     }
+}
+
+- (CGSize)sizeWithContentSize:(CGSize)contentSize {
+    contentSize.width += 2.0f * (_strokeWidth + _calloutWidthInset);
+	contentSize.height += 2.0f * _strokeWidth + _triangleHeight + _calloutBottomInset;
+    
+    return contentSize;
 }
 @end

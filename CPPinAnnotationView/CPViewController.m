@@ -66,7 +66,6 @@
             pinAnnotationView = [[[CPPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPPinAnnotationIdentifer] autorelease];
             pinAnnotationView.pinColor = CPPinAnnotationColorGreen;
             pinAnnotationView.draggable = YES;
-            pinAnnotationView.backgroundColor = [UIColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:0.25f];
         } else {
             pinAnnotationView.annotation = annotation;
         }
@@ -80,28 +79,42 @@
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     if ([view isMemberOfClass:[CPPinAnnotationView class]]) {
         CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
-
+        
         CLLocationCoordinate2D coordinate = [_mapView convertPoint:pinAnnotationView.calloutOffset toCoordinateFromView:pinAnnotationView];
-        CGPoint anchorPoint = [_mapView convertCoordinate:coordinate toPointToView:_mapView];
-                
+        CGPoint anchorPoint = [_mapView convertCoordinate:coordinate toPointToView:_mapView]; // The spot above the pin head
+        
         UIFont *font = [UIFont boldSystemFontOfSize:14.0f];
         NSString *hello = @"Hello, World!";
-        CGSize size = [hello sizeWithFont:font];
-        CGRect calloutFrame = CGRectMake(anchorPoint.x - size.width / 2.0f  , anchorPoint.y - size.height, size.width, size.height);
-        CGRect internalFrame = [mapView convertRect:calloutFrame toView:pinAnnotationView];
+        CGSize size = [hello sizeWithFont:font];        
         
-        CPCalloutView *calloutView = [[CPCalloutView alloc] initWithFrame:internalFrame];
-        calloutView.anchorPoint = anchorPoint;
-
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, size.width, size.height)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(4.0f, 4.0f, size.width, size.height)];
         label.text = hello;
         label.font = font;
         label.textColor = [UIColor whiteColor];
-        label.backgroundColor = [UIColor blackColor];
-        calloutView.contentView = label;
+        label.backgroundColor = [UIColor whiteColor];
+        
+        UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, size.width + 8.0f, size.height + 8.0f)];
+        [contentView addSubview:label];
         [label release];
         
-        calloutView.backgroundColor = [UIColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:0.25f];
+        CPCalloutView *calloutView = [[CPCalloutView alloc] initWithFrame:CGRectZero];
+        calloutView.backgroundColor = [UIColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:0.5f];
+        calloutView.contentView = contentView;
+        [contentView release];
+
+        calloutView.anchorPoint = CGPointMake(contentView.bounds.size.width / 2.0f, 0.0f);
+
+        CGSize calloutSize = [calloutView sizeWithContentSize:contentView.bounds.size];
+        if (calloutSize.width < self.mapView.bounds.size.width) {
+            CGRect bounds = CGRectMake(0.0f, 0.0f, calloutSize.width, calloutSize.height);
+            
+        }
+        
+        CGRect calloutBounds = CGRectMake(anchorPoint.x, anchorPoint.y - pinAnnotationView.bounds.size.height, calloutSize.width, calloutSize.height);
+        
+        CGRect internalFrame = [mapView convertRect:calloutBounds toView:pinAnnotationView];
+        calloutView.frame = internalFrame;
+
         pinAnnotationView.calloutView = calloutView;
         [calloutView release];
     }

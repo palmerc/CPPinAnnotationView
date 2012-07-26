@@ -25,7 +25,8 @@
     
     CGFloat _strokeWidth;
 	CGFloat _cornerRadius;
-    CGFloat _calloutInset;
+    CGFloat _calloutWidthInset;
+    CGFloat _calloutBottomInset;
     CGFloat _triangleWidth;
     CGFloat _triangleHeight;
     CGSize _shadowOffset;
@@ -43,7 +44,8 @@
 @property (nonatomic, assign) CGPoint anchorPoint;
 @property (nonatomic, assign) CGFloat strokeWidth;
 @property (nonatomic, assign) CGFloat cornerRadius;
-@property (nonatomic, assign) CGFloat calloutInset;
+@property (nonatomic, assign) CGFloat calloutWidthInset;
+@property (nonatomic, assign) CGFloat calloutBottomInset;
 @property (nonatomic, assign) CGFloat triangleWidth;
 @property (nonatomic, assign) CGFloat triangleHeight;
 @property (nonatomic, assign) CGSize shadowOffset;
@@ -52,4 +54,6 @@
 @property (nonatomic, retain) UIColor *shadowColor;
 @property (nonatomic, retain) UIColor *borderColor;
 @property (nonatomic, assign, getter=isShineEnabled) BOOL shineEnabled;
+
+- (CGSize)sizeWithContentSize:(CGSize)contentViewRect;
 @end
