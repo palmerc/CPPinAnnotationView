@@ -16,6 +16,7 @@
 
 
 @interface CPViewController ()
+- (UIView *)mapView:(MKMapView *)mapView calloutViewForAnnotationView:(MKAnnotationView *)view withContentView:(UIView *)contentView;
 @end
 
 
@@ -79,45 +80,67 @@
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     if ([view isMemberOfClass:[CPPinAnnotationView class]]) {
         CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
-        
-        CLLocationCoordinate2D coordinate = [_mapView convertPoint:pinAnnotationView.calloutOffset toCoordinateFromView:pinAnnotationView];
-        CGPoint anchorPoint = [_mapView convertCoordinate:coordinate toPointToView:_mapView]; // The spot above the pin head
-        
+
         UIFont *font = [UIFont boldSystemFontOfSize:14.0f];
-        NSString *hello = @"Hello, World!";
-        CGSize size = [hello sizeWithFont:font];        
+        NSString *hello = @"Current Location";
+        CGSize size = [hello sizeWithFont:font];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(4.0f, 4.0f, size.width, size.height)];
         label.text = hello;
         label.font = font;
         label.textColor = [UIColor whiteColor];
-        label.backgroundColor = [UIColor whiteColor];
+        label.backgroundColor = [UIColor clearColor];
         
         UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, size.width + 8.0f, size.height + 8.0f)];
         [contentView addSubview:label];
         [label release];
-        
-        CPCalloutView *calloutView = [[CPCalloutView alloc] initWithFrame:CGRectZero];
-        calloutView.backgroundColor = [UIColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:0.5f];
-        calloutView.contentView = contentView;
-        [contentView release];
 
-        calloutView.anchorPoint = CGPointMake(contentView.bounds.size.width / 2.0f, 0.0f);
-
-        CGSize calloutSize = [calloutView sizeWithContentSize:contentView.bounds.size];
-        if (calloutSize.width < self.mapView.bounds.size.width) {
-            CGRect bounds = CGRectMake(0.0f, 0.0f, calloutSize.width, calloutSize.height);
-            
-        }
-        
-        CGRect calloutBounds = CGRectMake(anchorPoint.x, anchorPoint.y - pinAnnotationView.bounds.size.height, calloutSize.width, calloutSize.height);
-        
-        CGRect internalFrame = [mapView convertRect:calloutBounds toView:pinAnnotationView];
-        calloutView.frame = internalFrame;
-
-        pinAnnotationView.calloutView = calloutView;
-        [calloutView release];
+        pinAnnotationView.calloutView = [self mapView:mapView calloutViewForAnnotationView:view withContentView:contentView];
     }
+}
+
+- (UIView *)mapView:(MKMapView *)mapView calloutViewForAnnotationView:(MKAnnotationView *)view withContentView:(UIView *)contentView {
+    CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
+    
+    CLLocationCoordinate2D coordinate = [mapView convertPoint:pinAnnotationView.calloutOffset toCoordinateFromView:pinAnnotationView];
+    CGPoint mapViewAnchorPoint = [mapView convertCoordinate:coordinate toPointToView:mapView]; // The spot above the pin head
+    
+    CPCalloutView *calloutView = [[CPCalloutView alloc] initWithFrame:CGRectZero];
+    calloutView.backgroundColor = [UIColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:0.5f];
+    calloutView.contentView = contentView;
+    [contentView release];
+    
+    CGSize calloutSize = [calloutView sizeWithContentSize:contentView.bounds.size];
+    
+    // Starting from the anchor point move the y origin up the height of the pin annotation view.
+    CGRect calloutFrame = CGRectMake(mapViewAnchorPoint.x, mapViewAnchorPoint.y, calloutSize.width, calloutSize.height);
+    calloutFrame.origin.y -= pinAnnotationView.bounds.size.height;
+    
+    CGRect pinViewCalloutFrame = [mapView convertRect:calloutFrame toView:pinAnnotationView];
+    calloutView.frame = pinViewCalloutFrame;
+    
+    // Shift the callout towards the center
+    CGPoint pinViewAnchorPoint = [mapView convertPoint:mapViewAnchorPoint toView:pinAnnotationView];
+    CGPoint pinViewMapViewCenter = [mapView convertPoint:mapView.center toView:pinAnnotationView];
+    CGPoint pinViewCalloutViewCenter = [mapView convertPoint:calloutView.center toView:pinAnnotationView];
+    
+    if (pinViewCalloutViewCenter.x < pinViewMapViewCenter.x) {// LHS
+        CGFloat maxDistance = 0.0f;
+        CGFloat centerDistance = pinViewMapViewCenter.x - pinViewCalloutViewCenter.x;
+        pinViewCalloutViewCenter.x += MIN(centerDistance, maxDistance);
+        calloutView.center = pinViewCalloutViewCenter;
+    } else if (pinViewCalloutViewCenter.x > pinViewMapViewCenter.x) { //RHS
+        CGFloat maxDistance = calloutView.bounds.size.width - pinViewAnchorPoint.x;
+        CGFloat centerDistance = pinViewCalloutViewCenter.x - pinViewMapViewCenter.x;
+        pinViewCalloutViewCenter.x -= MIN(centerDistance, maxDistance);
+        calloutView.center = pinViewCalloutViewCenter;
+    }
+    
+    if (calloutSize.width < mapView.bounds.size.width) {
+        // shift on screen
+    }
+
+    return [calloutView autorelease];
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
@@ -125,7 +148,7 @@
         CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
         
         pinAnnotationView.calloutView = nil;
-     }
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {

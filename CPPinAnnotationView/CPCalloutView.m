@@ -1,4 +1,4 @@
-//
+    //
 //  CPCalloutView.m
 //  CPCalloutView
 //
@@ -104,36 +104,45 @@
 
 - (void)drawRect:(CGRect)rect {
     CGRect calloutRect = rect;
-    
-	CGMutablePathRef path = CGPathCreateMutable();
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	
+    	
 	//Determine Size
 	calloutRect = self.bounds;
 	calloutRect.size.width -= 2.0f * (_strokeWidth + _calloutWidthInset);
 	calloutRect.size.height -= 2.0f * _strokeWidth + _triangleHeight + _calloutBottomInset;
-	calloutRect.origin.x += _strokeWidth / 2.0f + _calloutWidthInset;
-	calloutRect.origin.y += _strokeWidth / 2.0f;
+	calloutRect.origin.x += _strokeWidth + _calloutWidthInset;
+	calloutRect.origin.y += _strokeWidth;
     
-    CGRect innerRect = CGRectInset(calloutRect, _cornerRadius, _cornerRadius);
+    CGRect insetRect = CGRectInset(calloutRect, _cornerRadius, _cornerRadius);
+    CGPoint topSideLeft = CGPointMake(insetRect.origin.x, calloutRect.origin.y);
+    CGPoint topSideRight = CGPointMake(insetRect.origin.x + insetRect.size.width, calloutRect.origin.y);
     
-	//Create Path For Callout Bubble
-    BOOL clockwise = YES;
-	CGPathMoveToPoint(path, NULL, calloutRect.origin.x, calloutRect.origin.y + _cornerRadius);
-	CGPathAddLineToPoint(path, NULL, calloutRect.origin.x, calloutRect.origin.y + calloutRect.size.height - _cornerRadius);
-	CGPathAddArc(path, NULL, calloutRect.origin.x + _cornerRadius, calloutRect.origin.y + calloutRect.size.height - _cornerRadius, _cornerRadius, M_PI, M_PI / 2.0f, clockwise);
+    CGPoint rightSideTop = CGPointMake(calloutRect.origin.x + calloutRect.size.width, insetRect.origin.y);
+    CGPoint rightSideBottom = CGPointMake(calloutRect.origin.x + calloutRect.size.width, insetRect.origin.y + insetRect.size.height);
+    
+    CGPoint bottomSideRight = CGPointMake(insetRect.origin.x + insetRect.size.width, calloutRect.origin.y + calloutRect.size.height);
+    CGPoint bottomSideLeft = CGPointMake(insetRect.origin.x, calloutRect.origin.y + calloutRect.size.height);
+    
+    CGPoint leftSideBottom = CGPointMake(calloutRect.origin.x, insetRect.origin.y + insetRect.size.height);
+    CGPoint leftSideTop = CGPointMake(calloutRect.origin.x, insetRect.origin.y);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGMutablePathRef path = CGPathCreateMutable();
+    
+	CGPathMoveToPoint(path, NULL, topSideLeft.x, topSideLeft.y);
+	CGPathAddLineToPoint(path, NULL, topSideRight.x, topSideRight.y);
+	CGPathAddArcToPoint(path, NULL, rightSideTop.x, topSideRight.y, rightSideTop.x, rightSideTop.y, _cornerRadius);
+	CGPathAddLineToPoint(path, NULL, rightSideBottom.x, rightSideBottom.y);
+	CGPathAddArcToPoint(path, NULL, rightSideBottom.x, bottomSideRight.y, bottomSideRight.x, bottomSideRight.y, _cornerRadius);
     
     // The callout triangle below the box
-	CGPathAddLineToPoint(path, NULL, _anchorPoint.x - _triangleWidth / 2.0f, calloutRect.origin.y + calloutRect.size.height);
+	CGPathAddLineToPoint(path, NULL, _anchorPoint.x + floorf(_triangleWidth / 2.0f), bottomSideRight.y);
 	CGPathAddLineToPoint(path, NULL, _anchorPoint.x, calloutRect.origin.y + calloutRect.size.height + _triangleHeight);
-    CGPathAddLineToPoint(path, NULL, _anchorPoint.x + _triangleWidth / 2.0f, calloutRect.origin.y + calloutRect.size.height);
+    CGPathAddLineToPoint(path, NULL, _anchorPoint.x - floorf(_triangleWidth / 2.0f), bottomSideRight.y);
     
-	CGPathAddLineToPoint(path, NULL, calloutRect.origin.x + calloutRect.size.width - _cornerRadius, calloutRect.origin.y + calloutRect.size.height);
-	CGPathAddArc(path, NULL, calloutRect.origin.x + calloutRect.size.width - _cornerRadius, calloutRect.origin.y + calloutRect.size.height - _cornerRadius, _cornerRadius, M_PI / 2.0f, 0.0f, clockwise);
-	CGPathAddLineToPoint(path, NULL, calloutRect.origin.x + calloutRect.size.width, calloutRect.origin.y + _cornerRadius);
-	CGPathAddArc(path, NULL, calloutRect.origin.x + calloutRect.size.width - _cornerRadius, calloutRect.origin.y + _cornerRadius, _cornerRadius, 0.0f, -M_PI / 2.0f, clockwise);
-	CGPathAddLineToPoint(path, NULL, calloutRect.origin.x + _cornerRadius, calloutRect.origin.y);
-	CGPathAddArc(path, NULL, calloutRect.origin.x + _cornerRadius, calloutRect.origin.y + _cornerRadius, _cornerRadius, -M_PI / 2.0f, M_PI, clockwise);
+	CGPathAddLineToPoint(path, NULL, bottomSideLeft.x, bottomSideLeft.y);
+	CGPathAddArcToPoint(path, NULL, leftSideBottom.x, bottomSideLeft.y, leftSideBottom.x, leftSideBottom.y, _cornerRadius);
+	CGPathAddLineToPoint(path, NULL, leftSideTop.x, leftSideTop.y);
+	CGPathAddArcToPoint(path, NULL, leftSideTop.x, topSideLeft.y, topSideLeft.x, topSideLeft.y, _cornerRadius);
 	CGPathCloseSubpath(path);
 	
 	//Fill Callout Bubble & Add Shadow
@@ -164,27 +173,15 @@
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         
         //Determine Size for Gloss
-        CGRect glossRect = self.bounds;
-        glossRect.size.width = calloutRect.size.width - _strokeWidth;
-        glossRect.size.height = (calloutRect.size.height - _strokeWidth) / 2.0f;
-        glossRect.origin.x = calloutRect.origin.x + _strokeWidth / 2.0f;
-        glossRect.origin.y += calloutRect.origin.y + _strokeWidth / 2.0f;
+        CGRect glossRect = CGRectZero;
+        glossRect.origin.x = calloutRect.origin.x + _strokeWidth;
+        glossRect.origin.y = calloutRect.origin.y + _strokeWidth;
+        glossRect.size.width = calloutRect.size.width - 2.0f * _strokeWidth;
+        glossRect.size.height = floorf((calloutRect.size.height - 2.0f * _strokeWidth) / 2.0f);
         
-        CGFloat glossTopRadius = _cornerRadius - _strokeWidth / 2.0f;
-        CGFloat glossBottomRadius = _cornerRadius;
-        
-        //Create Path For Gloss
-        CGMutablePathRef glossPath = CGPathCreateMutable();
-        CGPathMoveToPoint(glossPath, NULL, glossRect.origin.x, glossRect.origin.y + glossTopRadius);
-        CGPathAddLineToPoint(glossPath, NULL, glossRect.origin.x, glossRect.origin.y + glossRect.size.height - glossBottomRadius);
-        CGPathAddArc(glossPath, NULL, glossRect.origin.x + glossBottomRadius, glossRect.origin.y + glossRect.size.height - glossBottomRadius, glossBottomRadius, M_PI, M_PI / 2.0f, clockwise);
-        CGPathAddLineToPoint(glossPath, NULL, glossRect.origin.x + glossRect.size.width - glossBottomRadius, glossRect.origin.y + glossRect.size.height);
-        CGPathAddArc(glossPath, NULL, glossRect.origin.x + glossRect.size.width - glossBottomRadius, glossRect.origin.y + glossRect.size.height - glossBottomRadius, glossBottomRadius, M_PI / 2.0f, 0.0f, clockwise);
-        CGPathAddLineToPoint(glossPath, NULL, glossRect.origin.x + glossRect.size.width, glossRect.origin.y + glossTopRadius);
-        CGPathAddArc(glossPath, NULL, glossRect.origin.x + glossRect.size.width - glossTopRadius, glossRect.origin.y + glossTopRadius, glossTopRadius, 0.0f, -M_PI / 2.0f, clockwise);
-        CGPathAddLineToPoint(glossPath, NULL, glossRect.origin.x + glossTopRadius, glossRect.origin.y);
-        CGPathAddArc(glossPath, NULL, glossRect.origin.x + glossTopRadius, glossRect.origin.y + glossTopRadius, glossTopRadius, -M_PI / 2.0f, M_PI, clockwise);
-        CGPathCloseSubpath(glossPath);
+        CGFloat glossRadius = _cornerRadius - _strokeWidth;
+        UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:glossRect cornerRadius:glossRadius];
+        CGPathRef glossPath = [bezierPath CGPath];
         
         //Fill Gloss Path
         CGContextAddPath(context, glossPath);
@@ -217,7 +214,6 @@
         CGPoint endPoint2 = CGPointMake(glossRect.origin.x, glossRect.origin.y + glossRect.size.height);
         CGContextDrawLinearGradient(context, gradient2, startPoint2, endPoint2, 0);
         
-        CGPathRelease(glossPath);
     	CGGradientRelease(gradient);
         CGGradientRelease(gradient2);
         CGColorSpaceRelease(colorSpace);
