@@ -96,35 +96,41 @@
         [label release];
 
         pinAnnotationView.calloutView = [self mapView:mapView calloutViewForAnnotationView:view withContentView:contentView];
+        [contentView release];
     }
 }
 
 - (UIView *)mapView:(MKMapView *)mapView calloutViewForAnnotationView:(MKAnnotationView *)view withContentView:(UIView *)contentView {
     CPPinAnnotationView *pinAnnotationView = (CPPinAnnotationView *)view;
     
+    // Lat/Long above pin head
     CLLocationCoordinate2D coordinate = [mapView convertPoint:pinAnnotationView.calloutOffset toCoordinateFromView:pinAnnotationView];
-    CGPoint mapViewAnchorPoint = [mapView convertCoordinate:coordinate toPointToView:mapView]; // The spot above the pin head
+     // The spot above the pin head
+    CGPoint mapViewAnchorPoint = [mapView convertCoordinate:coordinate toPointToView:mapView];
     
     CPCalloutView *calloutView = [[CPCalloutView alloc] initWithFrame:CGRectZero];
     calloutView.backgroundColor = [UIColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:0.5f];
     calloutView.contentView = contentView;
-    [contentView release];
     
+    // Get the size of the callout with a given bit of content
     CGSize calloutSize = [calloutView sizeWithContentSize:contentView.bounds.size];
     
     // Starting from the anchor point move the y origin up the height of the pin annotation view.
     CGRect calloutFrame = CGRectMake(mapViewAnchorPoint.x, mapViewAnchorPoint.y, calloutSize.width, calloutSize.height);
     calloutFrame.origin.y -= pinAnnotationView.bounds.size.height;
     
+    // Convert the callout frames coordinates from the mapView to inside the pin view
     CGRect pinViewCalloutFrame = [mapView convertRect:calloutFrame toView:pinAnnotationView];
     calloutView.frame = pinViewCalloutFrame;
     
-    // Shift the callout towards the center
+    // Convert the mapView's anchorPoint to the pinView's coordinate system
     CGPoint pinViewAnchorPoint = [mapView convertPoint:mapViewAnchorPoint toView:pinAnnotationView];
+    // Convert the mapView's center to the pinView's coordinate system
     CGPoint pinViewMapViewCenter = [mapView convertPoint:mapView.center toView:pinAnnotationView];
-    CGPoint pinViewCalloutViewCenter = [mapView convertPoint:calloutView.center toView:pinAnnotationView];
+    // This doesn't make sense.
+    CGPoint pinViewCalloutViewCenter = calloutView.center;
     
-    if (pinViewCalloutViewCenter.x < pinViewMapViewCenter.x) {// LHS
+    if (pinViewCalloutViewCenter.x < pinViewMapViewCenter.x) { // LHS
         CGFloat maxDistance = 0.0f;
         CGFloat centerDistance = pinViewMapViewCenter.x - pinViewCalloutViewCenter.x;
         pinViewCalloutViewCenter.x += MIN(centerDistance, maxDistance);

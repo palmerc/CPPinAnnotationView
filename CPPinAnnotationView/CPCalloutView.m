@@ -106,7 +106,6 @@
     CGRect calloutRect = rect;
     	
 	//Determine Size
-	calloutRect = self.bounds;
 	calloutRect.size.width -= 2.0f * (_strokeWidth + _calloutWidthInset);
 	calloutRect.size.height -= 2.0f * _strokeWidth + _triangleHeight + _calloutBottomInset;
 	calloutRect.origin.x += _strokeWidth + _calloutWidthInset;
