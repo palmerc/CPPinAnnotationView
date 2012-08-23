@@ -133,7 +133,6 @@
 	CGPathAddLineToPoint(path, NULL, rightSideBottom.x, rightSideBottom.y);
 	CGPathAddArcToPoint(path, NULL, rightSideBottom.x, bottomSideRight.y, bottomSideRight.x, bottomSideRight.y, _cornerRadius);
     
-    // The callout triangle below the box
 	CGPathAddLineToPoint(path, NULL, _anchorPoint.x + floorf(_triangleWidth / 2.0f), bottomSideRight.y);
 	CGPathAddLineToPoint(path, NULL, _anchorPoint.x, calloutRect.origin.y + calloutRect.size.height + _triangleHeight);
     CGPathAddLineToPoint(path, NULL, _anchorPoint.x - floorf(_triangleWidth / 2.0f), bottomSideRight.y);

@@ -109,7 +109,6 @@
     CGPoint mapViewAnchorPoint = [mapView convertCoordinate:coordinate toPointToView:mapView];
     
     CPCalloutView *calloutView = [[CPCalloutView alloc] initWithFrame:CGRectZero];
-    calloutView.backgroundColor = [UIColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:0.5f];
     calloutView.contentView = contentView;
     
     // Get the size of the callout with a given bit of content
@@ -125,16 +124,17 @@
     
     // Convert the mapView's anchorPoint to the pinView's coordinate system
     CGPoint pinViewAnchorPoint = [mapView convertPoint:mapViewAnchorPoint toView:pinAnnotationView];
+
     // Convert the mapView's center to the pinView's coordinate system
     CGPoint pinViewMapViewCenter = [mapView convertPoint:mapView.center toView:pinAnnotationView];
-    // This doesn't make sense.
     CGPoint pinViewCalloutViewCenter = calloutView.center;
     
     if (pinViewCalloutViewCenter.x < pinViewMapViewCenter.x) { // LHS
-        CGFloat maxDistance = 0.0f;
+        CGFloat maxDistance = -1.0f * pinViewAnchorPoint.x;
         CGFloat centerDistance = pinViewMapViewCenter.x - pinViewCalloutViewCenter.x;
         pinViewCalloutViewCenter.x += MIN(centerDistance, maxDistance);
         calloutView.center = pinViewCalloutViewCenter;
+        pinViewAnchorPoint.x += MIN(centerDistance, maxDistance);
     } else if (pinViewCalloutViewCenter.x > pinViewMapViewCenter.x) { //RHS
         CGFloat maxDistance = calloutView.bounds.size.width - pinViewAnchorPoint.x;
         CGFloat centerDistance = pinViewCalloutViewCenter.x - pinViewMapViewCenter.x;
@@ -142,6 +142,9 @@
         calloutView.center = pinViewCalloutViewCenter;
     }
     
+    CGPoint calloutViewAnchorPoint = [mapView convertPoint:pinViewAnchorPoint toView:calloutView];
+    calloutView.anchorPoint = calloutViewAnchorPoint;
+
     if (calloutSize.width < mapView.bounds.size.width) {
         // shift on screen
     }
