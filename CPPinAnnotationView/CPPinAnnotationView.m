@@ -52,6 +52,10 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
         
         CGPoint pinPoint = CGPointMake(floorf(pinSize.width / 2.0f * xPinBaseOffsetPercentage), -1.0f * floorf(pinSize.height / 2.0f * yPinBaseOffsetPercentage));
         self.centerOffset = pinPoint;
+        
+        CGFloat scale = [[UIScreen mainScreen] scale];
+        CGPoint pinHead = CGPointMake(floorf(pinPoint.x / scale), 0.0f);
+        self.calloutOffset = pinHead;
                 
         self.backgroundColor = [UIColor clearColor];
     }
@@ -68,10 +72,6 @@ static CGFloat yPinBaseOffsetPercentage = 0.80f;
 
 #pragma mark -
 #pragma mark MKAnnotationView methods
-- (CGPoint)calloutOffset {    
-    return CGPointMake(floorf(self.centerOffset.x), 0.0f);
-}
-
 - (BOOL)canShowCallout {
     return NO; // Prevent the stock view from appearing
 }

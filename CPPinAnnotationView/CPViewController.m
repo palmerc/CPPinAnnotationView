@@ -65,6 +65,7 @@
         if (pinAnnotationView == nil) {
             
             pinAnnotationView = [[[CPPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kCPPinAnnotationIdentifer] autorelease];
+            pinAnnotationView.backgroundColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.33];
             pinAnnotationView.pinColor = CPPinAnnotationColorGreen;
             pinAnnotationView.draggable = YES;
         } else {
@@ -109,6 +110,7 @@
     CGPoint mapViewAnchorPoint = [mapView convertCoordinate:coordinate toPointToView:mapView];
     
     CPCalloutView *calloutView = [[CPCalloutView alloc] initWithFrame:CGRectZero];
+    calloutView.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.33];
     calloutView.contentView = contentView;
     
     // Get the size of the callout with a given bit of content
@@ -134,7 +136,6 @@
         CGFloat centerDistance = pinViewMapViewCenter.x - pinViewCalloutViewCenter.x;
         pinViewCalloutViewCenter.x += MIN(centerDistance, maxDistance);
         calloutView.center = pinViewCalloutViewCenter;
-        pinViewAnchorPoint.x += MIN(centerDistance, maxDistance);
     } else if (pinViewCalloutViewCenter.x > pinViewMapViewCenter.x) { //RHS
         CGFloat maxDistance = calloutView.bounds.size.width - pinViewAnchorPoint.x;
         CGFloat centerDistance = pinViewCalloutViewCenter.x - pinViewMapViewCenter.x;
